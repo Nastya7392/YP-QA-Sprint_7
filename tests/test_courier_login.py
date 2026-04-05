@@ -32,6 +32,15 @@ class TestLoginCourier:
         assert 'message' in login_response.json()
         assert login_response.json()['message'] == data.LOGIN_WITH_INCORRECT_DATA_ERROR_MESSAGE
 
+    @allure.title('Авторизация под несуществующим пользователем через ручку /api/v1/courier/login')
+    def test_courier_login_with_nonexistent_user_courier_not_logged_in(self):
+        courier_data = helpers.generate_new_courier_data()
+        login_data = helpers.make_login_data(courier_data)
+        login_response = api.login_courier(login_data)
+        assert login_response.status_code == 404
+        assert 'message' in login_response.json()
+        assert login_response.json()['message'] == data.LOGIN_WITH_INCORRECT_DATA_ERROR_MESSAGE
+
     @allure.title('Авторизация курьера с пустым логином через ручку /api/v1/courier/login')
     def test_courier_login_with_empty_login_courier_not_logged_in(self, use_created_courier_data):
         login_data = helpers.make_login_data(use_created_courier_data)
